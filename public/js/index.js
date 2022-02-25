@@ -1,32 +1,57 @@
-age()
+let user = sessionStorage.getItem("user")
+console.log(user)
+if(user==null){
+    var xhr = new XMLHttpRequest()
+    xhr.open("GET", "http://localhost:3001/auth",true)
+    xhr.onload = function(){
+        console.log(data)
+        let data = JSON.parse(this.response)
+        user = data.user
+        let aHeader = document.createElement("user")
+    }
+}
+
+const UPDATE_FIRST = 0;
+const UPDATE_INTERVAL = 5000;
+
+setTimeout(age,UPDATE_FIRST)
 
 function age(){
     var xhr = new XMLHttpRequest()
-    xhr.open("GET", "http://localhost:3001/football")
-    //xhr.open("GET", "/js/data.json")
+    
+    score = 2000
+    //xhr.open("GET", "http://localhost:3001/football")
+    xhr.open("GET", "/js/data.json")
     xhr.onload = function(){
-        var data = JSON.parse(this.response)
+        let data = JSON.parse(this.response)
         createTable(data)
+        setTimeout(age,UPDATE_INTERVAL)
     }
     xhr.send()
 }
 
 function createTable(data){
-    var appElement = document.getElementById("app")
-    var aTable = document.createElement("table")
+    let appElement = document.getElementById("app")
+    appElement.textContent = '';
+
+    let aHeader = document.createElement("h1")
+    aHeader.id = "user"
+    aHeader.innerHTML = "Welcome " + user + "!"
+    appElement.appendChild(aHeader)
+
+    let aTable = document.createElement("table")
     appElement.appendChild(aTable)
-    console.log(data[0])
-    aTable.appendChild(createRow(data[0].name, data[0].points, data[0].logo))
-    aTable.appendChild(createRow(data[1].name, data[1].points, data[1].logo))
-    aTable.appendChild(createRow(data[2].name, data[2].points, data[2].logo))
-    aTable.appendChild(createRow(data[3].name, data[3].points, data[3].logo))
+    console.log(data)
+    for(row of data.table){
+        aTable.appendChild(createRow(row))
+    }
 }
 
-function createRow(name, points, url){
+function createRow(row){
     var aRow = document.createElement("tr") 
-    aRow.appendChild(createImageCell(url))
-    aRow.appendChild(createCell(name))
-    aRow.appendChild(createCell(points))   
+    aRow.appendChild(createImageCell(row.logo))
+    aRow.appendChild(createCell(row.name))
+    aRow.appendChild(createCell(row.points))   
     return aRow
 }
 
